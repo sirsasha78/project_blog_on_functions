@@ -1,3 +1,36 @@
 from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class Post(models.Model):
+
+    class Status(models.TextChoices):
+        DRAFT = "DF", "Draft"
+        PUBLISHED = "PB", "Published"
+
+    title = models.CharField(max_length=255, verbose_name="Заголовок")
+    slug = models.SlugField(max_length=255, unique=True, verbose_name="URL")
+    body = models.TextField(verbose_name="Контент")
+    publish = models.DateTimeField(default=timezone.now, verbose_name="Дата публикации")
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated = models.DateTimeField(auto_now=True, verbose_name="Дата изменения")
+    status = models.CharField(
+        max_length=2,
+        choices=Status.choices,
+        default=Status.DRAFT,
+        verbose_name="Статус",
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="blog_posts", verbose_name="Автор"
+    )
+
+    class Meta:
+        db_table = "post"
+        ordering = ["-publish"]
+        indexes = [
+            models.Index(fields=["-publish"]),
+        ]
+
+    def __str__(self) -> str:
+        return self.title
