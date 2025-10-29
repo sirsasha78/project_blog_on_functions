@@ -1,6 +1,13 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
+
+
+class PublishedManager(models.Manager):
+
+    def get_queryset(self) -> QuerySet["Post"]:
+        return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
 class Post(models.Model):
@@ -24,6 +31,9 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="blog_posts", verbose_name="Автор"
     )
+
+    objects = models.Manager()
+    published = PublishedManager()
 
     class Meta:
         db_table = "post"
