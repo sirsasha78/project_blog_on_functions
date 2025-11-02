@@ -12,4 +12,20 @@
 </p>
 {{ post.body|linebreaks }}
 <p><a href="{% url "blog:post_share" post.id %}">Поделится постом</a></p>
+
+{% with comments.count as total_comments %}
+<h2>Комментариев {{ total_comments }}</h2>
+{% endwith %}
+
+{% for comment in comments %}
+<div class="comment">
+    <p class="info">
+        Комментарий {{ forloop.counter }}, автор {{ comment.name }}. Добавлен {{ comment.created }}
+    </p>
+    {{ comment.body|linebreaks }}
+</div>
+{% empty %}
+<p>Комментариев пока нет.</p>
+{% endfor %}
+{% include "blog/post/includes/comment_form.html" %}
 {% endblock content %}
