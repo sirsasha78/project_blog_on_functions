@@ -3,17 +3,28 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
+    """Менеджер модели для фильтрации опубликованных записей."""
 
     def get_queryset(self) -> QuerySet["Post"]:
+        """Возвращает QuerySet, отфильтрованный по статусу 'опубликовано'."""
+
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
 class Post(models.Model):
+    """Модель поста для блога.
+    Представляет собой запись в блоге с заголовком, содержимым, датой публикации
+    и другими метаданными. Поддерживает статусы «Черновик» и «Опубликовано».
+    Используется для хранения и управления контентом блога."""
 
     class Status(models.TextChoices):
+        """Статусы публикации поста.
+        Определяет возможные состояния поста: черновик или опубликован."""
+
         DRAFT = "DF", "Draft"
         PUBLISHED = "PB", "Published"
 
@@ -37,8 +48,13 @@ class Post(models.Model):
 
     objects = models.Manager()
     published = PublishedManager()
+    tags = TaggableManager()
 
     class Meta:
+        """Мета-настройки модели.
+        Определяют поведение модели на уровне базы данных и в интерфейсе администратора.
+        """
+
         db_table = "post"
         ordering = ["-publish"]
         indexes = [
@@ -48,9 +64,13 @@ class Post(models.Model):
         verbose_name_plural = "Посты"
 
     def __str__(self) -> str:
+        """Возвращает строковое представление поста."""
+
         return self.title
 
     def get_absolute_url(self) -> str:
+        """Возвращает абсолютный URL поста."""
+
         return reverse(
             "blog:post_detail",
             args=[self.publish.year, self.publish.month, self.publish.day, self.slug],
@@ -58,6 +78,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """Модель для хранения комментариев к статьям."""
+
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="comments", verbose_name="Статья"
     )
@@ -73,6 +95,8 @@ class Comment(models.Model):
     active = models.BooleanField(default=True, verbose_name="Активность комментария")
 
     class Meta:
+        """Метакласс модели, определяющий дополнительные параметры поведения модели."""
+
         db_table = "comment"
         ordering = ["created"]
         indexes = [
@@ -82,4 +106,6 @@ class Comment(models.Model):
         verbose_name_plural = "Комментарии"
 
     def __str__(self) -> str:
+        """Возвращает строковое представление комментария."""
+
         return f"Комментарий {self.name} к посту {self.post}"
