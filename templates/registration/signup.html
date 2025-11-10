@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+
+{% block title %}
+Регистрация
+{% endblock title %}
+
+
+{% block content %}
+<h2>Регистрация</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Регистрация"></p>
+</form>
+{% endblock content %}

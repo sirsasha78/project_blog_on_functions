@@ -12,6 +12,8 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 
 def post_list(request: HttpRequest, tag_slug=None) -> HttpResponse:
+    """Отображает список опубликованных постов с возможностью фильтрации по тегу."""
+
     all_posts = Post.published.all()
     tag = None
     if tag_slug:
@@ -27,6 +29,8 @@ def post_list(request: HttpRequest, tag_slug=None) -> HttpResponse:
 def post_detail(
     request: HttpRequest, year: int, month: int, day: int, slug: str
 ) -> HttpResponse:
+    """Отображает подробную информацию о конкретном посте."""
+
     post = get_object_or_404(
         Post,
         status=Post.Status.PUBLISHED,
@@ -56,6 +60,8 @@ def post_detail(
 
 
 def post_share(request: HttpRequest, post_id: int) -> HttpResponse:
+    """Отображает форму для отправки публикации по электронной почте и обрабатывает её отправку."""
+
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
     sent = False
 
@@ -80,6 +86,8 @@ def post_share(request: HttpRequest, post_id: int) -> HttpResponse:
 
 @require_POST
 def post_comment(request: HttpRequest, post_id: int) -> HttpResponse:
+    """Обрабатывает POST-запрос на добавление комментария к опубликованному посту."""
+
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
     comment = None
     form = CommentForm(request.POST)
@@ -95,6 +103,8 @@ def post_comment(request: HttpRequest, post_id: int) -> HttpResponse:
 
 
 def post_search(request: HttpRequest) -> HttpResponse:
+    """Обрабатывает GET-запрос для поиска опубликованных постов по ключевому слову."""
+
     form = SearchForm()
     query = None
     results = []

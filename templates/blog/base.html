@@ -20,6 +20,20 @@
     <div id="sidebar">
         <h2>Мой блог</h2>
         <p>Это мой блог. В нем {% total_posts %} постов.</p>
+        <hr>
+
+        {% if user.is_authenticated %}
+        Привет {{ user.username}}
+        <form action="{% url "logout" %}" method="post">
+            {% csrf_token %}
+            <a href="#" onclick="parentNode.submit()">Выйти из системы</a>
+        </form>
+        {% else %}
+        <p>Вы не вошли в систему</p>
+        <a href="{% url "login" %}">Авторизоваться</a>
+        {% endif %}
+        <hr>
+
         <h3>Последние посты</h3>
         {% show_latest_posts 3 %}
 
