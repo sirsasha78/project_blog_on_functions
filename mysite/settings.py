@@ -152,3 +152,8 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = "blog:post_list"
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+
+LOGIN_URL = "accounts/login/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "media/"

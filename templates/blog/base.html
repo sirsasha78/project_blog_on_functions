@@ -24,13 +24,15 @@
 
         {% if user.is_authenticated %}
         Привет {{ user.username}}
+        <p><a href="{% url "users-profile" %}">Мой профиль</a></p> 
         <form action="{% url "logout" %}" method="post">
             {% csrf_token %}
             <a href="#" onclick="parentNode.submit()">Выйти из системы</a>
         </form>
         {% else %}
         <p>Вы не вошли в систему</p>
-        <a href="{% url "login" %}">Авторизоваться</a>
+        <p><a href="{% url "login" %}">Авторизоваться</a></p>
+        <p><a href="{% url "password_reset" %}">Забыли свой пароль?</a></p>
         {% endif %}
         <hr>
 
