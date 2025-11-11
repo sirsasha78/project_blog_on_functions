@@ -150,4 +150,5 @@ SERVER_EMAIL = os.getenv("EMAIL_HOST_USER")
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = "blog:post_list"
-LOGOUT_REDIRECT_URL = "blog:post_list"
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
