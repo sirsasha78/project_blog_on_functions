@@ -13,5 +13,7 @@
     <p><input type="submit" value="Авторизоваться"></p>
 </form>
 
+<p><a href="{% url "social:begin" "github" %}">Войдите в систему с помощью GitHub</a></p>
+<p><a href="{% url "social:begin" "google-oauth2" %}">Войдите в систему с помощью Google</a></p>
 <p><a href="{% url "password_reset" %}">Сброс пароля</a></p>
 {% endblock content %}
