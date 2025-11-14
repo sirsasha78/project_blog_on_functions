@@ -6,18 +6,22 @@
 
 
 {% block content %}
-{% if sent %}
-<h1>Электронное письмо успешно отправленно</h1>
-<p>
-    "{{ post.title}}" было успешно отправленно по адресу {{ form.cleaned_data.to}}.
-</p>
-{% else %}
-<h1>Поделится постом "{{ post.title}}" по электронной почте</h1>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Отправить письмо">
-</form>
-{% endif %}
-<p><a href="{{ post.get_absolute_url }}">Назад к посту</a></p>
-{% endblock content %}
+    {% if sent %}
+        <h1>Электронное письмо успешно отправлено</h1>
+        <p>
+            "{{ post.title }}" был успешно отправленно
+             {{ form.cleaned_data.to }}.
+        </p>
+    {% else %}
+        <h1>Рекомендовать "{{ post.title }}" по электронной почте</h1>
+        <form method="post">
+            {{ form.name }}
+            {{ form.email }}
+            {{ form.to }}
+            {{ form.comments }}
+            {% csrf_token %}
+            <input type="submit" value="Отправить письмо" class="btn btn-primary mb-3 btn-lg">
+        </form>
+    {% endif %}
+    <p><a href="{{ post.get_absolute_url }}">Вернуться к посту</a></p>
+{% endblock %}
